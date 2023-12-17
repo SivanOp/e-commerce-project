@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'authentication.CustomUser'
+
 
 # Application definition
 
@@ -83,7 +85,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '2311',
-        'HOST': 'localhost',    # Set to the appropriate host
+        'HOST': 'localhost',    # Set to the appropriate +
         'PORT': '5432',         # Set to the appropriate port
     }
 }
