@@ -1,8 +1,8 @@
-# authentication/serializers.py
 from rest_framework import serializers
-from .models import CustomUser
+from django.contrib.auth import get_user_model
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class CustomUserCreationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'password']
+        model = get_user_model()
+        fields = ('custom_username', 'custom_password')  # Add other fields as needed
+        extra_kwargs = {'custom_password': {'write_only': True}}

@@ -1,12 +1,11 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from .serializers import CustomUserCreationSerializer
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from django.views import View
-from django.contrib.auth.models import User
-from django.http import HttpResponseNotAllowed
-from .forms import CustomUserCreationForm
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from rest_framework.decorators import api_view
 
 def home_view(request):
     # Add any additional logic you need for the home page view
@@ -15,41 +14,28 @@ def home_view(request):
 def success_signup_view(request):
     return render(request, 'authentication/success_signup.html')
 
-class SignUpView(View):
-    template_name = 'authentication/signup.html'
+class SignUpView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        form = CustomUserCreationForm(request.POST)        
-        if request.method == "POST":
-            if form.is_valid():
-                user = form.save(commit=False) 
-                user.is_active = True
-                form.save()
-                # Redirect the user to a success page
-                success_url = reverse_lazy('success_signup')
-                return redirect(success_url)
-            else:
-                print(form.errors)
-        return render(request, self.template_name, {'form': form})
+        serializer = CustomUserCreationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            # Add any additional logic here
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class LoginView(View):
-    template_name = 'authentication/login.html'
+class LoginView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        print(request)
-        if request.method == "POST":
-            custom_username = request.POST.get('custom_username')
-            custom_password = request.POST.get('custom_password')
-            print(custom_username)
-            print(custom_password)
-            if custom_username is not None and custom_password is not None:
-                user = authenticate(request, custom_username=custom_username, custom_password=custom_password) 
-                print(user)
-                if user is not None:
-                    # User credentials are valid, log in the user
-                    login(request, user)
-                    return redirect('home')  # Replace 'home' with the name of your home page URL
-                
-        # If authentication fails or required data is missing, display an error message
-        return render(request, self.template_name, {'error_message': 'Invalid login credentials'})
+        custom_username = request.data.get('custom_username')
+        custom_password = request.data.get('custom_password')
+        
+        if custom_username is not None and custom_password is not None:
+            user = authenticate(request, custom_username=custom_username, custom_password=custom_password)
+            if user is not None:
+                login(request, user)
+                return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+
+        return Response({'error_message': 'Invalid login credentials'}, status=status.HTTP_401_UNAUTHORIZED)

@@ -8,8 +8,9 @@ class CustomUser(AbstractBaseUser):
     # Add custom fields
     custom_username = models.CharField(max_length=100, unique=True)
     custom_password = models.CharField(max_length=128)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     USERNAME_FIELD = "custom_username"
+    PASSWORD_FIELD = "custom_password"  
     objects = UserManager()
 
     class Meta:
