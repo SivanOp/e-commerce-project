@@ -41,10 +41,10 @@ class LoginView(View):
         if request.method == "POST":
             custom_username = request.POST.get('custom_username')
             custom_password = request.POST.get('custom_password')
-            #print(custom_username)
-            #print(custom_password)
+            print(custom_username)
+            print(custom_password)
             if custom_username is not None and custom_password is not None:
-                user = authenticate(custom_username=custom_username, custom_password=custom_password) 
+                user = authenticate(request, custom_username=custom_username, custom_password=custom_password) 
                 print(user)
                 if user is not None:
                     # User credentials are valid, log in the user
