@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\linoy\\OneDrive\\שולחן העבודה\\e-commerce project\\e-commerce-project\\ecommerce_backend\\manage.py",
+            "python": "C:\\Users\\linoy\\OneDrive\\שולחן העבודה\\e-commerce project\\e-commerce-project\\venv\\Scripts\\python.exe",
+            "env": {"PYTHONPATH": "C:\\Users\\linoy\\OneDrive\\שולחן העבודה\\e-commerce project\\e-commerce-project\\venv\\Scripts\\python.exe"},
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "justMyCode": true
+        }
+    ]
+}

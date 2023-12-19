@@ -22,6 +22,8 @@ class SignUpView(View):
         form = CustomUserCreationForm(request.POST)        
         if request.method == "POST":
             if form.is_valid():
+                user = form.save(commit=False) 
+                user.is_active = True
                 form.save()
                 # Redirect the user to a success page
                 success_url = reverse_lazy('success_signup')
@@ -35,13 +37,19 @@ class LoginView(View):
     template_name = 'authentication/login.html'
 
     def post(self, request, *args, **kwargs):
-        form = CustomUserCreationForm(request.POST)
+        print(request)
         if request.method == "POST":
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                #return redirect('home')  # Replace 'home' with the name of your home page URL
-            return render(request, self.template_name, {'error_message': 'Invalid login credentials'})
-        return render(request, self.template_name, {'form': form})
+            custom_username = request.POST.get('custom_username')
+            custom_password = request.POST.get('custom_password')
+            #print(custom_username)
+            #print(custom_password)
+            if custom_username is not None and custom_password is not None:
+                user = authenticate(custom_username=custom_username, custom_password=custom_password) 
+                print(user)
+                if user is not None:
+                    # User credentials are valid, log in the user
+                    login(request, user)
+                    return redirect('home')  # Replace 'home' with the name of your home page URL
+                
+        # If authentication fails or required data is missing, display an error message
+        return render(request, self.template_name, {'error_message': 'Invalid login credentials'})
